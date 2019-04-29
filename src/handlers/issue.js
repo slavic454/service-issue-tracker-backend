@@ -69,6 +69,10 @@ const updateIssueHandler = async (req, res, next) => {
 
         const issue = await Issue.findById(req.params.id);
 
+        if (issue === null) {
+            throw new restifyErrors.NotFoundError(`Issue with id=${req.params.id} doesn't exist`);
+        }
+
         req.log.debug(`Found issue=${JSON.stringify(issue)}`);
 
         if ((issue.status === 'pending' && input.value === 'open') ||
@@ -86,7 +90,7 @@ const updateIssueHandler = async (req, res, next) => {
         res.send(result);
 
     } catch (err) {
-        if (err instanceof restifyErrors.BadRequestError) {
+        if (err instanceof restifyErrors.BadRequestError || err instanceof restifyErrors.NotFoundError) {
             result = err;
             req.log.debug(
                 {reqId: req.id(), reqUrl: req.url, reqMethod: req.method},
