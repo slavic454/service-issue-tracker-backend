@@ -13,7 +13,7 @@ const joiEnvironmentSchema = joi.object({
     mongoPort: joi.number().integer().greater(0).required(),
     mongoDatabase: joi.string().min(3).required(),
     serverPort: joi.number().integer().greater(0).required(),
-    apiPrefix: joi.string().allow('').optional().regex(/^\/[a-z]+$/),
+    apiPrefix: joi.string().allow('').optional().regex(/^\/[a-z]+$/).default(''),
     logLevel: joi.string().valid('trace', 'debug', 'info', 'warn', 'error', 'fatal').required()
 });
 

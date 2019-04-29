@@ -1,6 +1,6 @@
 import Issue from '../models/issue';
 import joi from 'joi';
-import {joiPaginationSchema, joiIssueSchemaWithObjectId} from '../schemas';
+import {joiPaginationSchema, joiIssueSchemaWithObjectId, joiIssueSchema} from '../schemas';
 import restifyErrors from 'restify-errors';
 
 const getIssuesHandler = async (req, res, next) => {
@@ -104,5 +104,47 @@ const updateIssueHandler = async (req, res, next) => {
     next(result);
 };
 
-export {getIssuesHandler, updateIssueHandler};
+const createIssueHandler = async (req, res, next) => {
+
+    let result;
+
+    try {
+
+        const input = joi.validate(req.body,
+            joiIssueSchema);
+
+        if (input.error!==null) {
+            throw new restifyErrors.BadRequestError(input.error);
+        };
+
+        req.log.info(
+            {reqId: req.id(), reqUrl: req.url, reqMethod: req.method},
+            `Body=${JSON.stringify(req.body)}`);
+
+        result = new Issue(input.value);
+        result.save();
+        res.send(result);
+
+    } catch (err){
+
+        if (err instanceof restifyErrors.BadRequestError) {
+            result = err;
+            req.log.debug(
+                {reqId: req.id(), reqUrl: req.url, reqMethod: req.method},
+                `Following error occured: err=${err}`);
+        } else {
+            req.log.error(
+                {reqId: req.id(), reqUrl: req.url, reqMethod: req.method},
+                `Unexpected error: err=${err}`);
+
+            result = new restifyErrors
+            .InternalServerError('Cannot create issue');
+        }
+        return next(result);
+    }
+};
+
+export {getIssuesHandler, updateIssueHandler, createIssueHandler
+
+};
 

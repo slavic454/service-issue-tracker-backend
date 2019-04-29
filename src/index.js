@@ -2,7 +2,8 @@ import restify from 'restify';
 import mongoose from 'mongoose';
 import bunyan from 'bunyan';
 import {mongoURI, apiPrefix, serverPort, logLevel} from './environment';
-import {getIssuesHandler, updateIssueHandler} from './handlers/issue';
+import {getIssuesHandler, updateIssueHandler,
+    createIssueHandler} from './handlers/issue';
 
 const log = bunyan.createLogger(
     {name: 'issue-tracker-logger', level: logLevel});
@@ -30,6 +31,7 @@ server.use(restify.plugins.bodyParser());
 
 server.get(`${apiPrefix}/issues`, getIssuesHandler);
 server.put(`${apiPrefix}/issues/:id`, updateIssueHandler);
+server.post(`${apiPrefix}/issues`, createIssueHandler);
 
 server.listen(serverPort, ()=> {
     log.info(`Server started at ${serverPort} port`);
