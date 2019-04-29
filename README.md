@@ -15,7 +15,7 @@ ISSUE_TRACKER_LOG_LEVEL = debug
 ## API
 
 | Method | URL | Description |
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | GET | ${apiPrefix}/issues?page=1&limit=20 | Returns paginated list of issues, query params limit and page are optional |
 | PUT | ${apiPrefix}/issues/:id | Update issue resource with provided :id |
 | POST | ${apiPrefix}/issues | Create issue resource |
