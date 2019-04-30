@@ -75,7 +75,7 @@ const updateIssueHandler = async (req, res, next) => {
 
         req.log.debug(`Found issue=${JSON.stringify(issue)}`);
 
-        if ((issue.status === 'pending' && input.value === 'open') ||
+        if ((issue.status === 'pending' && input.value.status === 'open') ||
         (issue.status === 'closed' && input.value.status !== 'closed') ){
             throw new restifyErrors
             .BadRequestError(`Cannot change status from=${issue.status} 
